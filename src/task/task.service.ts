@@ -30,6 +30,7 @@ export class TaskService {
     return this.prisma.task.update({
       where: {
         id: id,
+        // update
       },
       data,
     });
