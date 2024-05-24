@@ -14,6 +14,7 @@ export class TaskService {
     return this.prisma.task.findUnique({
       where: {
         id: id,
+        // get id
       },
     });
   }
