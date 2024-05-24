@@ -35,12 +35,16 @@ jobs:
             export GIT_SSH_COMMAND="ssh -o StrictHostKeyChecking=no"
             # Create the project directory if it doesn't exist
             mkdir -p ~/tasks-api
-            # Ensure the directory is empty
+            # Ensure the directory i s empty
             rm -rf ~/tasks-api/*
             # Navigate to the project directory
             cd ~/tasks-api
             # Pull the latest code from the repository
-            git clone --branch develop git@github.com:esinniobiwaquareeb/tasks-api.git .
+            if [ -d ".git" ]; then
+              git pull origin develop
+            else
+              git clone --branch develop git@github.com:esinniobiwaquareeb/tasks-api.git .
+            fi
             # Check if Node.js is installed, if not install it
             if ! command -v node &> /dev/null; then
               curl -sL https://deb.nodesource.com/setup_21.x | sudo -E bash -
