@@ -68,6 +68,6 @@ jobs:
             else
               pm2 start dist/main.js --name "tasks-api"
             fi
-            # Save the pm2 process listj and corresponding environments
+            # Save the pm2 process list and corresponding environments
             pm2 save
             echo 'Deployment successful to Digital Ocean Droplet'
