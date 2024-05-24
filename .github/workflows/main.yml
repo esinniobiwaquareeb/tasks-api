@@ -14,7 +14,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '21'
+          node-version: '21' # Update to the appropriate Node.js version
 
       - name: Install dependencies
         run: npm install
@@ -33,41 +33,31 @@ jobs:
           script: |
             # Disable host key checking for this script execution
             export GIT_SSH_COMMAND="ssh -o StrictHostKeyChecking=no"
-            # Create the project directory if it doesn't exist
-            mkdir -p ~/tasks-api
-            # Ensure the directory i s empty
-            rm -rf ~/tasks-api/*
-            # Navigate to the project directory
-            cd ~/tasks-api
-            # Pull the latest code from the repository
-            if [ -d ".git" ]; then
-              git pull origin develop
-            else
+            # Create the project directory if it doesn't exist and navigate to it
+            mkdir -p ~/tasks-api && cd ~/tasks-api
+            # Check if the repository has been cloned before
+            if [ ! -d ".git" ]; then
               git clone --branch develop git@github.com:esinniobiwaquareeb/tasks-api.git .
+            else
+              git pull origin develop
             fi
-            # Check if Node.js is installed, if not install it
+            # Install Node.js and npm if not already installed
             if ! command -v node &> /dev/null; then
-              curl -sL https://deb.nodesource.com/setup_21.x | sudo -E bash -
+              curl -fsSL https://deb.nodesource.com/setup_21.x | sudo -E bash -
               sudo apt-get install -y nodejs
             fi
-            # Check if npm is installed, if not install it
-            if ! command -v npm &> /dev/null; then
-              sudo apt-get install -y npm
-            fi
-            # Check if pm2 is installed, if not install it
+            # Install PM2 if not already installed
             if ! command -v pm2 &> /dev/null; then
               sudo npm install -g pm2
             fi
-            # Install dependencies on the remote server
-            npm install
-            # Build the project on the remote server
-            npm run build
-            # Start the NestJS app using pm2, restart if it already exists
+            # Install project dependencies and build
+            npm install && npm run build
+            # Start the NestJS app using PM2, restart if it already exists
             if pm2 list | grep -q "tasks-api"; then
               pm2 restart tasks-api
             else
               pm2 start dist/main.js --name "tasks-api"
             fi
-            # Save the pm2 process list and corresponding environments
+            # Save the PM2 process list
             pm2 save
             echo 'Deployment successful to Digital Ocean Droplet'
