@@ -45,6 +45,7 @@ jobs:
             # Ensure the .env file is present
             echo 'DATABASE_URL="file:./dev.db"' > .env
 
+            # None
             # Install Node.js and npm if not already installed
             if ! command -v node &> /dev/null; then
               curl -fsSL https://deb.nodesource.com/setup_21.x | sudo -E bash -
